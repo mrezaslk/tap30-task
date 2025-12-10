@@ -7,7 +7,7 @@ interface ItemCardProps {
   item: Item;
 }
 
-export const ItemCard: React.FC<ItemCardProps> = React.memo(({ item }) => {
+export const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
   return (
     <li>
       <Link
@@ -38,6 +38,4 @@ export const ItemCard: React.FC<ItemCardProps> = React.memo(({ item }) => {
       </Link>
     </li>
   );
-});
-
-ItemCard.displayName = "ItemCard";
+};

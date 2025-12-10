@@ -3,7 +3,8 @@ import { createRoot, hydrateRoot } from "react-dom/client";
 import { App } from "./App";
 import { initialData } from "@shared/types";
 import { InitialDataProvider } from "./context/InitialDataContext";
-import '@client/style.css'
+import '@client/style.css';
+
 declare global {
   interface Window {
     __INITIAL_DATA__?: initialData;
