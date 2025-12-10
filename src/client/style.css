@@ -8,6 +8,7 @@
 
 body {
   font-family: "vazirmatn";
+  font-display: swap;
 }
 
 input[type="text"] {
