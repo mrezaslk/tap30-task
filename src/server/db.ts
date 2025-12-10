@@ -1,19 +1,18 @@
-import { randomUUID } from "crypto";
 import { Item, ItemId } from "../shared/types";
 
 const items: Item[] = [
   {
-    id: randomUUID(),
+    id: "1",
     title: "this is the first title",
     description: "this is a first description",
   },
   {
-    id: randomUUID(),
+    id: "2",
     title: "this is the second title",
     description: "this is a second description",
   },
   {
-    id: randomUUID(),
+    id: "3",
     title: "this is the third title",
     description: "this is a third description",
   },

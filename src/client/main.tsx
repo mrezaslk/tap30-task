@@ -1,13 +1,34 @@
 import React from "react";
-import ReactDom from "react-dom/client";
+import { createRoot, hydrateRoot } from "react-dom/client";
 import { App } from "./App";
+import { initialData } from "@shared/types";
+import { InitialDataProvider } from "./InitialDataContext";
+import '@client/global.css'
+declare global {
+  interface Window {
+    __INITIAL_DATA__?: initialData;
+  }
+}
 
 const container = document.getElementById("root");
-if (container) {
-  const root = ReactDom.createRoot(container);
-  root.render(
-    <React.StrictMode>
+if (!container) {
+  throw new Error("Root container not found");
+}
+const initialData = window.__INITIAL_DATA__;
+const app = (
+  <React.StrictMode>
+    {initialData ? (
+      <InitialDataProvider value={initialData}>
+        <App />
+      </InitialDataProvider>
+    ) : (
       <App />
-    </React.StrictMode>
-  );
+    )}
+  </React.StrictMode>
+);
+if (container.hasChildNodes()) {
+  hydrateRoot(container, app);
+} else {
+  const root = createRoot(container);
+  root.render(app);
 }

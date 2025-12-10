@@ -2,19 +2,20 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import type { Item } from "@shared/types";
 import { API_BASE } from "@client/constant/global";
-
-// const mockItems: Item[] = [
-//   { id: "1", title: "اولین آیتم", description: "توضیحات کوتاه برای آیتم اول." },
-//   { id: "2", title: "دومین آیتم", description: "توضیحات کوتاه برای آیتم دوم." },
-//   { id: "3", title: "سومین آیتم", description: "توضیحات کوتاه برای آیتم سوم." },
-// ];
+import { useInitialData } from "@client/InitialDataContext";
 
 export const ListPage: React.FC = () => {
-  const [items, setItems] = useState<Item[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const initialData = useInitialData();
+  const initialItems =
+    initialData?.route === "list" && initialData.items
+      ? initialData.items
+      : null;
+  const [items, setItems] = useState<Item[]>(initialItems ?? []);
+  const [loading, setLoading] = useState<boolean>(initialItems === null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!loading) return;
     async function fetchItems() {
       try {
         const res = await fetch(`${API_BASE}/items`);
@@ -31,13 +32,13 @@ export const ListPage: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <main style={{ padding: '16px' }}>در حال بارگذاری</main>;
+    return <main className="bg-blue-300">در حال بارگذاری</main>;
   }
   if (error) {
-    return <main style={{ padding: "16px" }}>{error}</main>;
+    return <main className="bg-blue-300">{error}</main>;
   }
   return (
-    <main style={{ padding: "16px" }}>
+    <main className="bg-blue-200 h-screen">
       <h1>لیست آیتم‌ها</h1>
       <ul style={{ listStyle: "none", padding: 0 }}>
         {items.map((item) => (

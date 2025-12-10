@@ -2,15 +2,22 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import type { Item } from "@shared/types";
 import { API_BASE } from "@client/constant/global";
+import { useInitialData } from "@client/InitialDataContext";
 
 export const DetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [item, setItem] = useState<Item | null>(null);
-  const [loading, setLoading] = useState(true);
+  const initialData = useInitialData();
+  const initialItem =
+    initialData?.route === "detail" && initialData.item
+      ? initialData.item
+      : null;
+
+  const [item, setItem] = useState<Item | null>(initialItem);
+  const [loading, setLoading] = useState(initialItem === null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!id) return;
+    if (!loading || !id) return;
     async function fetchItem() {
       try {
         const res = await fetch(`${API_BASE}/items/${id}`);

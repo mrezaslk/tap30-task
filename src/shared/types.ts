@@ -5,3 +5,11 @@ export interface Item {
   title: string;
   description: string;
 }
+
+export type RouteName = "list" | "detail";
+
+export interface initialData {
+  route: RouteName;
+  items?: Item[];
+  item?: Item | null;
+}
