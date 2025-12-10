@@ -2,8 +2,8 @@ import React from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
 import { App } from "./App";
 import { initialData } from "@shared/types";
-import { InitialDataProvider } from "./InitialDataContext";
-import '@client/global.css'
+import { InitialDataProvider } from "./context/InitialDataContext";
+import '@client/style.css'
 declare global {
   interface Window {
     __INITIAL_DATA__?: initialData;

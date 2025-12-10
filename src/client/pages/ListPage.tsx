@@ -1,62 +1,37 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import type { Item } from "@shared/types";
-import { API_BASE } from "@client/constant/global";
-import { useInitialData } from "@client/InitialDataContext";
+import React, { useState, useCallback } from "react";
+import { useItems } from "@client/hooks/useItems";
+import { LoadingState } from "@client/components/LoadingState";
+import { ErrorState } from "@client/components/ErrorState";
+import { SearchInput } from "@client/components/SearchInput";
+import { ItemList } from "@client/components/ItemList";
 
 export const ListPage: React.FC = () => {
-  const initialData = useInitialData();
-  const initialItems =
-    initialData?.route === "list" && initialData.items
-      ? initialData.items
-      : null;
-  const [items, setItems] = useState<Item[]>(initialItems ?? []);
-  const [loading, setLoading] = useState<boolean>(initialItems === null);
-  const [error, setError] = useState<string | null>(null);
+  const { items, loading, error } = useItems();
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
-  useEffect(() => {
-    if (!loading) return;
-    async function fetchItems() {
-      try {
-        const res = await fetch(`${API_BASE}/items`);
-        if (!res.ok) throw new Error("Failed to fetch items");
-        const data: Item[] = await res.json();
-        setItems(data);
-      } catch (err) {
-        setError("مشکلی در دریافت اطلاعات به وجود امده است");
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchItems();
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchQuery(value);
   }, []);
 
   if (loading) {
-    return <main className="bg-blue-300">در حال بارگذاری</main>;
+    return <LoadingState />;
   }
+
   if (error) {
-    return <main className="bg-blue-300">{error}</main>;
+    return <ErrorState message={error} />;
   }
+
   return (
-    <main className="bg-blue-200 h-screen">
-      <h1>لیست آیتم‌ها</h1>
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {items.map((item) => (
-          <li
-            key={item.id}
-            style={{
-              border: "1px solid #ddd",
-              padding: "12px",
-              marginBottom: "8px",
-              borderRadius: "8px",
-            }}
-          >
-            <h2 style={{ marginBottom: "4px" }}>{item.title}</h2>
-            <p style={{ marginBottom: "8px" }}>{item.description}</p>
-            <Link to={`/items/${item.id}`}>مشاهده جزئیات</Link>
-          </li>
-        ))}
-      </ul>
+    <main className="min-h-screen bg-gray-50">
+      <div className="max-w-xl mx-auto px-4 py-6">
+        <header className="w-full mb-6">
+          <h1 className="text-lg font-bold text-gray-900 mb-4">
+            لیست پزشکان آنلاین
+          </h1>
+          <SearchInput value={searchQuery} onChange={handleSearchChange} />
+        </header>
+        <ItemList items={items} searchQuery={searchQuery} />
+      </div>
     </main>
   );
 };

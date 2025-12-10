@@ -1,70 +1,60 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams, Link } from "react-router-dom";
-import type { Item } from "@shared/types";
-import { API_BASE } from "@client/constant/global";
-import { useInitialData } from "@client/InitialDataContext";
+import { useItem } from "@client/hooks/useItem";
+import { LoadingState } from "@client/components/LoadingState";
+import { BackButton } from "@client/components/BackButton";
+import { ItemDetail } from "@client/components/ItemDetail";
 
 export const DetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const initialData = useInitialData();
-  const initialItem =
-    initialData?.route === "detail" && initialData.item
-      ? initialData.item
-      : null;
-
-  const [item, setItem] = useState<Item | null>(initialItem);
-  const [loading, setLoading] = useState(initialItem === null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!loading || !id) return;
-    async function fetchItem() {
-      try {
-        const res = await fetch(`${API_BASE}/items/${id}`);
-        if (res.status === 404) {
-          setError("آیتم پیدا نشد");
-          return;
-        }
-        if (!res.ok) {
-          throw new Error("Failed to fetch item");
-        }
-        const data: Item = await res.json();
-        setItem(data);
-      } catch (err) {
-        setError("مشکلی در دریافت اطلاعات به وجود امده است");
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchItem();
-  }, [id]);
+  const { item, loading, error } = useItem(id);
 
   if (loading) {
-    return <main style={{ padding: "16px" }}>در حال بارگذاری...</main>;
+    return <LoadingState />;
   }
 
   if (error) {
     return (
-      <main style={{ padding: "16px" }}>
-        <p>{error}</p>
-        <Link to="/">⬅ برگشت به لیست</Link>
+      <main className="min-h-screen bg-gray-50">
+        <div className="max-w-2xl mx-auto px-4 py-6">
+          <div className="bg-white rounded-lg border border-gray-200 p-6 text-center">
+            <div className="text-red-600 text-lg mb-4">{error}</div>
+            <Link
+              to="/"
+              className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 active:scale-[0.98] transition-all duration-200 min-h-[44px]"
+            >
+              ← برگشت به لیست
+            </Link>
+          </div>
+        </div>
       </main>
     );
   }
+
   if (!item) {
     return (
-      <main style={{ padding: "16px" }}>
-        <p>آیتم پیدا نشد.</p>
-        <Link to="/">برگشت به لیست</Link>
+      <main className="min-h-screen bg-gray-50">
+        <div className="max-w-2xl mx-auto px-4 py-6">
+          <div className="bg-white rounded-lg border border-gray-200 p-6 text-center">
+            <div className="text-gray-600 text-lg mb-4">آیتم پیدا نشد.</div>
+            <Link
+              to="/"
+              className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 active:scale-[0.98] transition-all duration-200 min-h-[44px]"
+            >
+              ← برگشت به لیست
+            </Link>
+          </div>
+        </div>
       </main>
     );
   }
 
   return (
-    <main style={{ padding: "16px" }}>
-      <h1>{item.title}</h1>
-      <p style={{ margin: "12px 0" }}>{item.description}</p>
-      <Link to="/">⬅ برگشت به لیست</Link>
+    <main className="min-h-screen bg-gray-50">
+      <div className="max-w-2xl mx-auto px-4 py-6">
+        <BackButton />
+        <ItemDetail item={item} />
+      </div>
     </main>
   );
 };

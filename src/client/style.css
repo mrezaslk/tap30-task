@@ -1,0 +1,18 @@
+@import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap");
+
+@import "tailwindcss";
+
+@theme {
+  --font-vazirmatn: "vazirmatn", san-serif;
+}
+
+body {
+  font-family: "vazirmatn";
+}
+
+input[type="text"] {
+  border: none;
+}
+button {
+  @apply bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm cursor-pointer my-2 w-3/4 py-2 px-4 rounded transition-colors duration-150;
+}

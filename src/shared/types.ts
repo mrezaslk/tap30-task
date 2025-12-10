@@ -4,6 +4,8 @@ export interface Item {
   id: ItemId;
   title: string;
   description: string;
+  specialization: string;
+  location: string;
 }
 
 export type RouteName = "list" | "detail";

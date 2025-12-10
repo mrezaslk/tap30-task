@@ -1,8 +1,8 @@
-import { AppRoutes } from "@client/AppRoutes";
+import { AppRoutes } from "@client/Routes/AppRoutes";
 import { StaticRouter } from "react-router-dom";
 import ReactDOMServer from "react-dom/server";
 import { initialData } from "@shared/types";
-import { InitialDataProvider } from "@client/InitialDataContext";
+import { InitialDataProvider } from "@client/context/InitialDataContext";
 
 export function renderHtml(url: string, initialData: initialData) {
   const app = (
